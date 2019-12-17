@@ -2,12 +2,18 @@ import cv2
 import numpy as np
 import array
 
+img = cv2.imread('test_sample1.jpg', 0)# 331, 328 Search for an image full of circles
+scale_percent = 30 # percent of original size
+width = int(img.shape[1] * scale_percent / 100)
+height = int(img.shape[0] * scale_percent / 100)
+dim = (width, height)
+img = cv2.resize(img, dim)
+cv2.imshow('Resized', img)
+#cv2.imshow('Original',img)
+ret, thresh = cv2.threshold(img,127,255,cv2.THRESH_BINARY_INV)
+#cv2.imshow('before', thresh)
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
 kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
-img = cv2.imread('test_sample13.jpg', 0)  # 331, 328 Search for an image full of circles
-cv2.imshow('Original',img)
-ret, thresh = cv2.threshold(img,127,255,cv2.THRESH_BINARY_INV)
-cv2.imshow('before', thresh)
 #edges = cv2.Canny(thresh,0,255)
 #cv2.imshow('after', edges)
 #contours,hierarchy = cv2.findContours(edges,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
