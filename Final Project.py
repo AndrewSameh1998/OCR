@@ -9,28 +9,15 @@ height = int(img.shape[0] * scale_percent / 100)
 dim = (width, height)
 img = cv2.resize(img, dim)
 cv2.imshow('Resized', img)
-#cv2.imshow('Original',img)
-ret, thresh = cv2.threshold(img,127,255,cv2.THRESH_BINARY_INV)
-#cv2.imshow('before', thresh)
+ret, thresh = cv2.threshold(img,0,255,cv2.THRESH_BINARY_INV)
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
 kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
-#edges = cv2.Canny(thresh,0,255)
-#cv2.imshow('after', edges)
-#contours,hierarchy = cv2.findContours(edges,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-#cv2.drawContours(edges, contours, -1, (255,255,255), 1)
-#cv2.imshow('Contour',edges)
-ret, thresh2 = cv2.threshold(img,0,0,cv2.THRESH_BINARY_INV)
-
-# Update upper part
-circles = cv2.HoughCircles(thresh,cv2.HOUGH_GRADIENT,1,20,param1=80,param2=10,minRadius=2,maxRadius=2)
-if circles is not None:
-    circles = np.uint16(np.around(circles))
-    for i in circles[0,:]:
-        cv2.circle(thresh2,(i[0],i[1]),1,(255,255,255))
-    cv2.imshow('circles',thresh2)
-    print(circles)
-    print(len(circles[0]))
-print (circles[0][0][0])
+cv2.imshow('Thresh 2', thresh)
+answers = cv2.connectedComponentsWithStats(thresh, 4, cv2.CV_32S)
+answers = answers[2]
+answers = answers[1:23]
+print("Number Of Circles", len(answers))
+print("Array", answers)
 
 def Answer (Question_no, x_axis,y_axis):
     if (i[0] >= 292) & (i[0] <= 302) & (i[1] >= 236):
