@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import array
 import math
 from scipy import ndimage
 
@@ -21,16 +20,20 @@ for x1, y1, x2, y2 in lines[0]:
 median_angle = np.median(angles)
 img = ndimage.rotate(img, median_angle)
 
-print("Angle is {}".format(median_angle))
+#print("Angle is {}".format(median_angle))
 cv2.imshow('Rotated', img)
+img = cv2.bitwise_not(img)
 # scale_percent = 30 # percent of original size
 # width = int(img.shape[1] * scale_percent / 100)
 # height = int(img.shape[0] * scale_percent / 100)
 # dim = (width, height)
 # img = cv2.resize(img, dim)
 # cv2.imshow('Resized', img)
-# ret, thresh = cv2.threshold(img,0,255,cv2.THRESH_BINARY_INV)
-# kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+ret, thresh = cv2.threshold(img,235,255,cv2.THRESH_BINARY)
+cv2.imshow('threshed', thresh)
+kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
+img = cv2.erode(thresh,kernel)
+cv2.imshow('Eroded', img)
 # kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
 # cv2.imshow('Thresh 2', thresh)
 # answers = cv2.connectedComponentsWithStats(thresh, 4, cv2.CV_32S)
