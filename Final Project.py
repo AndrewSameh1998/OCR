@@ -5,24 +5,21 @@ from scipy import ndimage
 
 img = cv2.imread('test_sample8.jpg', 0)# 331, 328 Search for an image full of circles
 img = cv2.resize(img,(481,680))
-cv2.imshow("aaa", img)
+cv2.imshow("Original_Img", img)
+img = cv2.bitwise_not(img)
 #img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 img_edges = cv2.Canny(img, 100, 100, apertureSize=3)
 lines = cv2.HoughLinesP(img_edges, 1, math.pi / 180.0, 100, minLineLength=50, maxLineGap=5)
-
 angles = []
-
 for x1, y1, x2, y2 in lines[0]:
-    cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
+    #cv2.line(img, (x1, y1), (x2, y2), (255, 0, 0), 3)
     angle = math.degrees(math.atan2(y2 - y1, x2 - x1))
     angles.append(angle)
 
 median_angle = np.median(angles)
 img = ndimage.rotate(img, median_angle)
-
 #print("Angle is {}".format(median_angle))
 cv2.imshow('Rotated', img)
-img = cv2.bitwise_not(img)
 # scale_percent = 30 # percent of original size
 # width = int(img.shape[1] * scale_percent / 100)
 # height = int(img.shape[0] * scale_percent / 100)
@@ -31,9 +28,7 @@ img = cv2.bitwise_not(img)
 # cv2.imshow('Resized', img)
 ret, thresh = cv2.threshold(img,235,255,cv2.THRESH_BINARY)
 cv2.imshow('threshed', thresh)
-kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
-img = cv2.erode(thresh,kernel)
-cv2.imshow('Eroded', img)
+#kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
 # kernel2 = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
 # cv2.imshow('Thresh 2', thresh)
 # answers = cv2.connectedComponentsWithStats(thresh, 4, cv2.CV_32S)
