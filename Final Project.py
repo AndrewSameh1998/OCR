@@ -3,43 +3,43 @@ import numpy as np
 import math
 
 
-def rotateImage(image, angle):
-    image_center = tuple(np.array(image.shape[1::-1]) / 2)
-    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
-    result = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
+def rotateImage(image, angle): # image rotation function by calculating the center of the image and then rotate it
+    image_center = tuple(np.array(image.shape[1::-1]) / 2) # calculating the center of image
+    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0) # calculating the suitable rotation matrix
+    result = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR) # Getting the final image as a result
     return result
 
 
-file = open("Output.txt","w+")
-img = cv2.imread('test_sample2.jpg', 0)
-img = cv2.resize(img,(481,680))
-img = cv2.bitwise_not(img)
+file = open("Output.txt","w+") # Opening the output file to use it
+img = cv2.imread('test_sample9.jpg', 0) # Reading the input image
+img = cv2.resize(img,(481,680)) # Resizing the image
+img = cv2.bitwise_not(img) # Inverting the image to be ready for applying some operations
 
-img_edges = cv2.Canny(img, 100, 100, apertureSize=3)
-lines = cv2.HoughLinesP(img_edges, 1, math.pi / 180.0, 100, minLineLength=50, maxLineGap=5)
+img_edges = cv2.Canny(img, 100, 100, apertureSize=3) # Edge detection
+lines = cv2.HoughLinesP(img_edges, 1, math.pi / 180.0, 100, minLineLength=50, maxLineGap=5) # Line detection
 angles = []
 for x1, y1, x2, y2 in lines[0]:
 
-    angle = math.degrees(math.atan2(y2 - y1, x2 - x1))
+    angle = math.degrees(math.atan2(y2 - y1, x2 - x1)) # Calculating the angle of rotation by calculating slope
     angles.append(angle)
 
-median_angle = np.median(angles)
+median_angle = np.median(angles) # Getting the angle value to rotate the image
 
-img = rotateImage(img,median_angle)
-img = cv2.resize(img,(481,680))
+img = rotateImage(img,median_angle) # Image rotation function by passing the image and the angle calculated before
+img = cv2.resize(img,(481,680)) # Resizing again after rotation
 
-ret, thresh = cv2.threshold(img,235,255,cv2.THRESH_BINARY)
+ret, thresh = cv2.threshold(img,235,255,cv2.THRESH_BINARY) # Applying thresholding on the image to get the needed information only
 kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE,(3,3))
 eroded = cv2.erode(thresh,kernel)
-eroded = cv2.dilate(eroded,kernel)
+eroded = cv2.dilate(eroded,kernel) # erosion to make sure there is no noise
 
-answers = cv2.connectedComponentsWithStats(eroded, 4, cv2.CV_32S)
+answers = cv2.connectedComponentsWithStats(eroded, 4, cv2.CV_32S) # Function to detect the components in the image after thresholding
 answers = answers[2]
 answers = answers[1:23]
 j = 0
 Question_no = "1.1","1.2","1.3","1.4","1.5","2.1","2.2","2.3","2.4","2.5","2.6","3.1","3.2","3.3","4.1","4.2","4.3",\
               "5.1","5.2"
-for i in answers:
+for i in answers: # printing the answers detected from the image
     if i[1] == answers[0][1]:
         if (i[0] >= 353) & (i[0] <= 391):
             file.write("Gender: Male \r\n")
