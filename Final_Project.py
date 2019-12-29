@@ -39,6 +39,20 @@ answers = answers[1:23]
 j = 0
 Question_no = "1.1","1.2","1.3","1.4","1.5","2.1","2.2","2.3","2.4","2.5","2.6","3.1","3.2","3.3","4.1","4.2","4.3",\
               "5.1","5.2"
+answer_previous = answers[0][1]
+
+for f in answers:
+    if (f[1] == answers[0][1]):
+       # answer_previous = i
+        continue
+    elif((f[1]<=answer_previous+3) & (f[1]>=answer_previous-3)):
+        print("error")
+        file.write("Rejected")
+        file.close()
+        cv2.destroyAllWindows()
+    else:answer_previous = f[1]
+
+
 for i in answers: # printing the answers detected from the image
     if i[1] == answers[0][1]:
         if (i[0] >= 353) & (i[0] <= 391):
