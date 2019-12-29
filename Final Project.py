@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import math
 
-
+x = input("Enter image path : ")
 def rotateImage(image, angle): # image rotation function by calculating the center of the image and then rotate it
     image_center = tuple(np.array(image.shape[1::-1]) / 2) # calculating the center of image
     rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0) # calculating the suitable rotation matrix
@@ -11,7 +11,7 @@ def rotateImage(image, angle): # image rotation function by calculating the cent
 
 
 file = open("Output.txt","w+") # Opening the output file to use it
-img = cv2.imread('test_sample9.jpg', 0) # Reading the input image
+img = cv2.imread(x, 0) # Reading the input image
 img = cv2.resize(img,(481,680)) # Resizing the image
 img = cv2.bitwise_not(img) # Inverting the image to be ready for applying some operations
 
